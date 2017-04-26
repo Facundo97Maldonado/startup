@@ -6,95 +6,78 @@
     <meta http-equiv="Content-Type" content="text/html;">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>First Topic</title>
+	<title>Topic 1</title>
 
-	<!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-		div {
-		    margin-left: auto;
-		    margin-right: auto;
-		}
-    </style>
+	<link rel="stylesheet" type="text/css" href="myStylesheet.css">
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-<header>
-	<div class="container">
-		<section>
-			<div class="row">
-				<h1>First Topic</h1>
-			</div>
-		</section>
+	<header>
+		<h1>Topic 1</h1>	
+	</header>
+	<div>
+		<button class="form-control" onmouseover="changeText(this)">
+				Drag mouse over me to say hello to universe
+		</button>
 	</div>
-</header>
-	<div class="container">
-		<section>
-			<div class="row">
-				<div ng-app="myApp" ng-controler="myCtrl">
-
-						<input type="text" ng-model="firstName" placeholder="First Name" class="form-control">
-						<br>
-						<h4>Your Name : <strong>{{firstName}}</strong></h4>
-				</div>
-
-				<button class="form-control" onmouseover="changeText(this)">
-							Drag mouse over me to say hello to universe</button>
-			</div>
-		</section>
-		<section style="display: none;">
-			<div class="row">
-				Hello World!
-			</div>
-		</section>
-		<br>
-		<section>
-			<div class="row">
-				<button  class="form-control btn-xs" onclick="randomJokes()" id="buttonSection">
-						Click me! 
-				</button>
-				<p id="joke"></p>
-				<!-- Below this comment is the code which I have doubts -->
-				<p id="error" style="display: none; color: red;">There was an error!</p>
-			</div>
-		</section>
-		<br>
-		<!-- <section>
-			<div class="row">
-				<button class="form-control" onclick="repositories()">
-						Repositories
-				</button>
-				<p id="git"></p>
-			</div>
-		</section> -->
+	<br>
+	<section class="js-fade" id="arbitraryJokes">
+			Hello World!
+			<!--<ul id="list"> </ul>-->
+	</section>
+	<br>
+	<div>
+		<button  class="form-control btn-xs" onclick="loadXMLDoc()" id="jokesGenerator">
+				Click me! 
+		</button>
 	</div>
- 
 
 
-<!-- Function to write something somewhere at the same 
-		time that you are writting in a input text -->
-<script>	
-	angular.module('myApp',[]).controller('myCtrl', function($scope){
-	$scope.firstName = "Facundo";
-	});
-</script>
+<!--JAVASCRIPT -->
 <!-- Function to change the text of a button when you drag the mouse over him -->
 <script>
 	function changeText(id){
 		id.innerHTML = "Hello Universe!";
 	}
 </script>
+<!-- fade in / Exercise 3-->
+<script>
+	let section = document.querySelector('.js-fade');
+
+	function fadeIn(section, display){
+	  section.style.opacity = -10; //time after page loads to display the content
+	  section.style.display = display || "block";
+
+	  (function fade() {
+	    let val = parseFloat(section.style.opacity);
+	    if (!((val += .1) > 1)) {
+	      section.style.opacity = val;
+	      requestAnimationFrame(fade);
+	    }
+	  })();
+	}
+
+	fadeIn(section);
+</script>
+
 <!-- Function to set specific content to the button when is clicked. Exercise 6-->
  <script>
 	function loadXMLDoc() {
 	  let xhttp = new XMLHttpRequest();
 	  xhttp.onreadystatechange = function() {
 	    if (this.readyState == 4 && this.status == 200) {
-	      document.getElementById("changedButton").innerHTML =
-	      		this.responseText;
+	      /*let texto = '';
+	      	this.responseText.forEach(function(value){
+				texto = texto + value."lo que quiero que muestre";
+	      	});
+	      *///by martin
+	      let data = JSON.parse(this.responseText);
+	      console.log(data.value);
+	      document.getElementById("arbitraryJokes").innerHTML =
+	      		data.value.joke;
 	    }
 	  };
+	  //https://api.github.com/search/repositories?q='Javascript' This is for the exercise 9.
 	  xhttp.open("GET", "http://api.icndb.com/jokes/random", true);
 	  xhttp.send();
 	}
@@ -102,23 +85,23 @@
 <!-- Reusable function to perform AJAX calls. Exercise 7-->
 <script>
 	function randomJokes(){
-		let error = document.getElementById("error"); 
  	 	let config = {  								//the config object
-     		url: 'http://api.icndb.com/jokes/random'
+     		url: "http://api.icndb.com/jokes/random"
   		};
     function resolve(xhttp) {
-   	   error.style.display = "none";
    	   let response = JSON.parse(event.target.response);
        document.getElementById('joke').innerHTML = response.value.joke;
        if (xhttp.readyState === XMLHttpRequest.DONE){
            if (xhttp.responseText.value){
-               document.getElementById("buttonSection").innerHTML = 
+               document.getElementById("jokesGenerator").innerHTML = 
                		xhttp.responseText.value.joke;
             }
         }
     };
-    function reject() { 
-   	   error.style.display = "block"; //This is for the Exercise 8.
+    function reject() { //When an error occurs
+   	   //Here is the Answer to exercise 8
+ 	   document.getElementById("joke").style.color = "red";
+
     };
     eventRequestReusable(config).then(resolve,reject); //Here is where the configuration object is entered
   
@@ -141,7 +124,28 @@
    })
   };
 </script>
+<!--Exercise 9 -->
+<script >
+	function getRepositoriesWithParameter(){
+		let config = {
+			url: "https://api.github.com/search/repositories?q='Javascript'"
+		}
+		function resolve(xhttp) {
+		    console.log(xhttp.responseURL);
+		    document.getElementById("list").innerHTML = "";
+		    var response = JSON.parse(event.target.response);
+		       for (var i = 0; i < response.items.length; i++){
+				   let listElement = document.createElement("li");
+				   let data = document.createTextNode(response.items[i].full_name);
+				   listElement.appendChild(data);
+				   document.getElementById('list').appendChild(listElement);
+			   }
+		}
+	    function reject(){
 
-<script src="js/bootstrap.min.js"></script>
+        }
+	    //eventRequest(config).then(resolve,reject);
+	}
+</script>
 </body>
 </html>
