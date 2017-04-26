@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Type" content="text/html;">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>Topic 1</title>
@@ -33,6 +32,13 @@
 				 Search Repositories! 
 		</button>
 		<input type="text" name="inputSearch" id="searchField">
+	</div>
+	<br>
+	<div>
+		<button onclick="tableCreator()" id="tableMaker">Make a table</button>
+		<table id="table">
+				
+		</table>
 	</div>
 
 
@@ -165,6 +171,41 @@
 		  xhttp.open("GET", "https://api.github.com/search/repositories?q=" + searchField , true);
 		  xhttp.send();
 		}
+</script>
+<!-- Exercise 12 -->
+<script>
+	function myTable(){
+		let table = [
+			['Apple', 'Banana', 'Citrus'],
+			['Dynamo', 'Easter', 'Form'],
+		];
+		return table;
+	}
+
+	function tableCreator() {
+		myOwnTable = myTable();
+	    let body = document.getElementsByTagName('body')[0];
+	    let tbl = document.createElement('table');
+	    tbl.style.width = '50%';
+	    tbl.setAttribute('border', '1');
+	    let tbdy = document.createElement('tbody');
+	    for (let i = 0; i < 2; i++) {
+	        let tr = document.createElement('tr');
+	        for (let j = 0; j < 3; j++) {
+	            if (i == 2 && j == 1) {
+	                break
+	            } else {
+	                let td = document.createElement('td');
+	                td.appendChild(document.createTextNode(myOwnTable[i][j]));
+	                i == 1 && j == 1 ? td.setAttribute('rowSpan', '2') : null;
+	                tr.appendChild(td)
+	            }
+	        }
+	        tbdy.appendChild(tr);
+	    }
+	    tbl.appendChild(tbdy);
+	    body.appendChild(tbl)
+	}
 </script>
 </body>
 </html>
