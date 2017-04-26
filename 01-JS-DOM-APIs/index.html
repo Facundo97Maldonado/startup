@@ -23,11 +23,13 @@
 	<br>
 	<section class="js-fade" id="arbitraryJokes">
 			Hello World!
-			<!--<ul id="list"> </ul>-->
+			<ul id="list"> 
+				
+			</ul>
 	</section>
 	<br>
 	<div>
-		<button  class="form-control btn-xs" onclick="loadXMLDoc()" id="jokesGenerator">
+		<button  class="form-control btn-xs" onclick="getRepositories()" id="jokesGenerator">
 				Click me! 
 		</button>
 	</div>
@@ -60,24 +62,18 @@
 	fadeIn(section);
 </script>
 
-<!-- Function to set specific content to the button when is clicked. Exercise 6-->
+<!-- Function to set specific content to the section when is clicked. Exercise 6-->
  <script>
 	function loadXMLDoc() {
 	  let xhttp = new XMLHttpRequest();
 	  xhttp.onreadystatechange = function() {
 	    if (this.readyState == 4 && this.status == 200) {
-	      /*let texto = '';
-	      	this.responseText.forEach(function(value){
-				texto = texto + value."lo que quiero que muestre";
-	      	});
-	      *///by martin
 	      let data = JSON.parse(this.responseText);
 	      console.log(data.value);
 	      document.getElementById("arbitraryJokes").innerHTML =
 	      		data.value.joke;
 	    }
 	  };
-	  //https://api.github.com/search/repositories?q='Javascript' This is for the exercise 9.
 	  xhttp.open("GET", "http://api.icndb.com/jokes/random", true);
 	  xhttp.send();
 	}
@@ -126,26 +122,26 @@
 </script>
 <!--Exercise 9 -->
 <script >
-	function getRepositoriesWithParameter(){
-		let config = {
-			url: "https://api.github.com/search/repositories?q='Javascript'"
+	    function getRepositories() {
+		  let xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() {
+		    if (this.readyState == 4 && this.status == 200) {
+		      console.log(xhttp.responseURL);
+		      document.getElementById("list").innerHTML = "";
+		      let response = JSON.parse(event.target.response);
+		      	for(let i = 0; i < response.items.length; i++){
+		      		let listElement = document.createElement("li");
+		      		let data = document.createTextNode(response.items[i].full_name);
+		      		listElement.appendChild(data);
+		      		document.getElementById("list").appendChild(listElement);
+		      	}
+		    }
+		  };
+		  //https://api.github.com/search/repositories?q='Javascript' This is for the exercise 9.
+		  xhttp.open("GET", "https://api.github.com/search/repositories?q='Javascript'", true);
+		  xhttp.send();
 		}
-		function resolve(xhttp) {
-		    console.log(xhttp.responseURL);
-		    document.getElementById("list").innerHTML = "";
-		    var response = JSON.parse(event.target.response);
-		       for (var i = 0; i < response.items.length; i++){
-				   let listElement = document.createElement("li");
-				   let data = document.createTextNode(response.items[i].full_name);
-				   listElement.appendChild(data);
-				   document.getElementById('list').appendChild(listElement);
-			   }
-		}
-	    function reject(){
-
-        }
-	    //eventRequest(config).then(resolve,reject);
-	}
+	
 </script>
 </body>
 </html>
