@@ -8,41 +8,64 @@
 	<title>Topic 1</title>
 
 	<link rel="stylesheet" type="text/css" href="myStylesheet.css">
+
 </head>
 <body>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-	<header>
-		<h1>Topic 1</h1>	
-	</header>
+<header>
 	<div>
-		<button class="form-control" onmouseover="changeText(this)">
-				Drag mouse over me to say hello to universe
+		<h1>Topic 1</h1>
+	</div>
+</header>
+	<div>
+		<button onmouseover="changeText(this)">
+					Drag mouse over me to say hello to universe
 		</button>
 	</div>
-	<br>
 	<section class="js-fade" id="arbitraryJokes">
 			Hello World!
-			<ul id="list"> 
-				
-			</ul>
+		<ul id="list">
+					
+		</ul>
+	</section>
+	<section id="joke"> <!-- I do another section, so you can see function 6(with id arbitrary jokes) and 7 (with id joke)-->
+		
 	</section>
 	<br>
 	<div>
-		<button  class="form-control btn-xs" onclick="searchRepositories()" id="jokesGenerator">
-				 Search Repositories! 
+		<button onclick="loadXMLDoc()">
+			Load XML Doc!
 		</button>
-		<input type="text" name="inputSearch" id="searchField">
 	</div>
 	<br>
 	<div>
-		<button onclick="tableCreator()" id="tableMaker">Make a table</button>
-		<table id="table">
-				
-		</table>
+		<button  onclick="randomJokes()" id="jokesGenerator">
+			Random Jokes Generator! 
+		</button>
 	</div>
-
-
-<!--JAVASCRIPT -->
+	<br>
+	<div>
+		<button onclick="getRepositories()" >
+			Get Repositories about Javascript!
+		</button>
+	</div>
+	<br>
+	<div>
+		<button  onclick="searchRepositories()">
+ 			Search Repositories! 
+  		</button>
+ 		<input type="text" name="inputSearch" id="searchField">
+	</div>
+	<br>
+ 	<div>
+ 		<button onclick="tableCreator()" id="tableMaker">
+ 			Make a table
+ 		</button>
+ 		<table id="table">
+ 				
+ 		</table>
+ 	</div>
+	
+ 
 <!-- Function to change the text of a button when you drag the mouse over him -->
 <script>
 	function changeText(id){
@@ -51,21 +74,21 @@
 </script>
 <!-- fade in / Exercise 3-->
 <script>
-	let section = document.querySelector('.js-fade');
-
+ 	let section = document.querySelector('.js-fade');
+ 
 	function fadeIn(section, display){
-	  section.style.opacity = -10; //time after page loads to display the content
-	  section.style.display = display || "block";
-
-	  (function fade() {
-	    let val = parseFloat(section.style.opacity);
-	    if (!((val += .1) > 1)) {
-	      section.style.opacity = val;
-	      requestAnimationFrame(fade);
-	    }
-	  })();
-	}
-
+		section.style.opacity = -10; //time after page loads to display the content
+ 	    section.style.display = display || "block";
+ 
+ 	  	(function fade() {
+ 	    	let val = parseFloat(section.style.opacity);
+ 	    	if (!((val += .1) > 1)) {
+ 	      		section.style.opacity = val;
+ 	      		requestAnimationFrame(fade);
+ 	    	}
+ 	  	})();
+ 	}
+ 
 	fadeIn(section);
 </script>
 
@@ -76,9 +99,9 @@
 	  xhttp.onreadystatechange = function() {
 	    if (this.readyState == 4 && this.status == 200) {
 	      let data = JSON.parse(this.responseText);
-	      console.log(data.value);
-	      document.getElementById("arbitraryJokes").innerHTML =
-	      		data.value.joke;
+ 	      console.log(data.value);
+ 	      document.getElementById("arbitraryJokes").innerHTML =
+ 	      		data.value.joke;
 	    }
 	  };
 	  xhttp.open("GET", "http://api.icndb.com/jokes/random", true);
@@ -91,121 +114,120 @@
  	 	let config = {  								//the config object
      		url: "http://api.icndb.com/jokes/random"
   		};
-    function resolve(xhttp) {
-   	   let response = JSON.parse(event.target.response);
-       document.getElementById('joke').innerHTML = response.value.joke;
-       if (xhttp.readyState === XMLHttpRequest.DONE){
-           if (xhttp.responseText.value){
-               document.getElementById("jokesGenerator").innerHTML = 
-               		xhttp.responseText.value.joke;
-            }
-        }
-    };
-    function reject() { //When an error occurs
-   	   //Here is the Answer to exercise 8
- 	   document.getElementById("joke").style.color = "red";
-
-    };
-    eventRequestReusable(config).then(resolve,reject); //Here is where the configuration object is entered
+	    function resolve(xhttp) {
+	   	   let response = JSON.parse(event.target.response);
+	       document.getElementById('joke').innerHTML = response.value.joke;
+	       if (xhttp.readyState === XMLHttpRequest.DONE){
+	           if (xhttp.responseText.value){
+	               document.getElementById("jokesGenerator").innerHTML = 
+	               		xhttp.responseText.value.joke;
+	            }
+	        }
+	    };
+	    function reject() { 
+	   	   document.getElementById("joke").style.color = "red"; //This is for the Exercise 8.
+	    };
+    
+    	eventRequestReusable(config).then(resolve,reject); //Here is where the configuration object is entered
   
     };
     function eventRequestReusable(object, resolve, reject) { //Here is it the reusable function 
-   return new Promise( function (resolve, reject) {          //The promise return
-	   let xhttp = new XMLHttpRequest();
-	   xhttp.open('GET', object.url , true);
-	   xhttp.send();
-	   xhttp.onload = function () {
-	     if (this.status == 200) {
-	       resolve(xhttp);
-	     } else {
-	       reject(this.statusText);
-	     }
-	    };
-	   xhttp.onerror = function () {
-	     reject(this.statusText);
-	   };
-   })
-  };
+   		return new Promise( function (resolve, reject) {          //The promise return
+	   		let xhttp = new XMLHttpRequest();
+	   		xhttp.open('GET', object.url , true);
+	   		xhttp.send();
+	   		xhttp.onload = function () {
+		     	if (this.status == 200) {
+		       		resolve(xhttp);
+		     	} else {
+		       		reject(this.statusText);
+		     	}
+	    	};
+	   		xhttp.onerror = function () {
+	     		reject(this.statusText);
+	   		};
+   		})
+  	};
 </script>
-<!--Exercise 9 -->
-<script >
-	    function getRepositories() {
-		  let xhttp = new XMLHttpRequest();
-		  xhttp.onreadystatechange = function() {
-		    if (this.readyState == 4 && this.status == 200) {
-		      console.log(xhttp.responseURL);
-		      document.getElementById("list").innerHTML = "";
-		      let response = JSON.parse(event.target.response);
-		      	for(let i = 0; i < response.items.length; i++){
-		      		let listElement = document.createElement("li");
-		      		let data = document.createTextNode(response.items[i].full_name);
-		      		listElement.appendChild(data);
-		      		document.getElementById("list").appendChild(listElement);
-		      	}
-		    }
-		  };
-		  xhttp.open("GET", "https://api.github.com/search/repositories?q='Javascript'", true);
-		  xhttp.send();
-		}
-	
+<!-- Exercise 9 -->
+<script>
+	function getRepositories() {
+ 		let xhttp = new XMLHttpRequest();
+ 		xhttp.onreadystatechange = function() {
+ 			if (this.readyState == 4 && this.status == 200) {
+ 		    	console.log(xhttp.responseURL);
+ 		        document.getElementById("list").innerHTML = "";
+ 		        let response = JSON.parse(event.target.response);
+ 		      	for(let i = 0; i < response.items.length; i++){
+ 		      		let listElement = document.createElement("li");
+ 		      		let data = document.createTextNode(response.items[i].full_name);
+ 		      		listElement.appendChild(data);
+ 		      		document.getElementById("list").appendChild(listElement);
+ 		      	}
+ 		    }
+ 		};
+
+ 		xhttp.open("GET", "https://api.github.com/search/repositories?q='Javascript'", true);
+ 		xhttp.send();
+  	}
 </script>
 <!-- Exercise 10 -->
 <script>
-	function searchRepositories() {
-		  let xhttp = new XMLHttpRequest();
-		  xhttp.onreadystatechange = function() {
-		    if (this.readyState == 4 && this.status == 200) {
-		      console.log(xhttp.responseURL);
-		      document.getElementById("list").innerHTML = "";
-		      let response = JSON.parse(event.target.response);
-		      	for(let i = 0; i < response.items.length; i++){
-		      		let listElement = document.createElement("li");
-		      		let data = document.createTextNode(response.items[i].full_name);
-		      		listElement.appendChild(data);
-		      		document.getElementById("list").appendChild(listElement);
-		      	}
-		    }
-		  };
-		  let searchField = document.getElementById("searchField").value;
-		  console.log(searchField);
-		  xhttp.open("GET", "https://api.github.com/search/repositories?q=" + searchField , true);
-		  xhttp.send();
-		}
+ 	function searchRepositories() {
+ 		let xhttp = new XMLHttpRequest();
+ 		xhttp.onreadystatechange = function() {
+ 			if (this.readyState == 4 && this.status == 200) {
+ 		    	console.log(xhttp.responseURL);
+ 		        document.getElementById("list").innerHTML = "";
+ 		        let response = JSON.parse(event.target.response);
+ 		      	for(let i = 0; i < response.items.length; i++){
+ 		      		let listElement = document.createElement("li");
+ 		      		let data = document.createTextNode(response.items[i].full_name);
+ 		      		listElement.appendChild(data);
+ 		      		document.getElementById("list").appendChild(listElement);
+ 		      	}
+ 		    }
+ 		};
+ 		let searchField = document.getElementById("searchField").value;
+ 		console.log(searchField);
+ 		xhttp.open("GET", "https://api.github.com/search/repositories?q=" + searchField , true);
+ 		xhttp.send();
+ 	}
 </script>
 <!-- Exercise 12 -->
 <script>
-	function myTable(){
-		let table = [
-			['Apple', 'Banana', 'Citrus'],
-			['Dynamo', 'Easter', 'Form'],
-		];
-		return table;
-	}
-
-	function tableCreator() {
-		myOwnTable = myTable();
-	    let body = document.getElementsByTagName('body')[0];
-	    let tbl = document.createElement('table');
-	    tbl.style.width = '50%';
-	    tbl.setAttribute('border', '1');
-	    let tbdy = document.createElement('tbody');
-	    for (let i = 0; i < 2; i++) {
-	        let tr = document.createElement('tr');
-	        for (let j = 0; j < 3; j++) {
-	            if (i == 2 && j == 1) {
-	                break
-	            } else {
-	                let td = document.createElement('td');
-	                td.appendChild(document.createTextNode(myOwnTable[i][j]));
-	                i == 1 && j == 1 ? td.setAttribute('rowSpan', '2') : null;
-	                tr.appendChild(td)
-	            }
-	        }
-	        tbdy.appendChild(tr);
-	    }
-	    tbl.appendChild(tbdy);
-	    body.appendChild(tbl)
-	}
+ 	function myTable(){
+ 		let table = [
+ 			['Apple', 'Banana', 'Citrus'],
+ 			['Dynamo', 'Easter', 'Form'],
+ 		];
+ 		return table;
+ 	}
+ 
+ 	function tableCreator() {
+ 		myOwnTable = myTable();
+ 	    let body = document.getElementsByTagName('body')[0];
+ 	    let tbl = document.createElement('table');
+ 	    tbl.style.width = '50%';
+ 	    tbl.setAttribute('border', '1');
+ 	    let tbdy = document.createElement('tbody');
+ 	    for (let i = 0; i < 2; i++) {
+ 	        let tr = document.createElement('tr');
+ 	        for (let j = 0; j < 3; j++) {
+ 	            if (i == 2 && j == 1) {
+ 	                break
+ 	            } else {
+ 	                let td = document.createElement('td');
+ 	                td.appendChild(document.createTextNode(myOwnTable[i][j]));
+ 	                i == 1 && j == 1 ? td.setAttribute('rowSpan', '2') : null;
+ 	                tr.appendChild(td)
+ 	            }
+ 	        }
+ 	        tbdy.appendChild(tr);
+ 	    }
+ 	    tbl.appendChild(tbdy);
+ 	    body.appendChild(tbl)
+ 	}
 </script>
 </body>
 </html>
