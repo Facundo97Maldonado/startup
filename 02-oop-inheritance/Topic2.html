@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Topic 2</title>
+</head>
+<body>
+
+<script>
+	let movies = {	
+		title:"",
+		year:"", 
+		duration:"",
+		play: function(){
+			let playVideo = document.getElementByTagName("video");
+			playVideo.load();
+			playVideo.play();
+		},
+		pause: function(){
+			let pauseVideo = document.getElementByTagName("video");
+			pauseVideo.pause();
+		},
+		resume: function(){
+			let resumeVideo = document.getElementByTagName("video");
+			resumeVideo.play();
+		}
+	};
+	function movie(title, year, duration){
+		this.title = title;
+		this.year = year;
+		this.duration = duration;
+	}
+	let FastAndFurious = new movie("Fast and Furious 8", "2017", "03:44");
+	let Transformers = new movie("Transformers - The dark side of the moon", "2013", "02:38");
+	let Terminator = new movie("Terminator III", "2010", "03:15");
+	console.log(FastAndFurious);
+	console.log(Transformers);
+	console.log(Terminator);
+</script>
+
+</body>
+</html>
