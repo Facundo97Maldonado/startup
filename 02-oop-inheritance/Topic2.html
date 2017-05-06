@@ -129,7 +129,7 @@
 	class Logger {
 
 		log(info){
-			console.log("The "+ info +	" event has been emitted.");
+			console.log("The "+ info +" event has been emitted.");
 		}
 		
 	}
@@ -142,7 +142,26 @@
 	FastAndFurious.pause();
 	FastAndFurious.resume();
 
+	let social = {
+
+		share: function(friendName){
+			console.log(friendName + " share " + this.title);
+		},
+
+		like: function(friendName){
+			console.log(friendName + " like "  + this.title);
+		}
+
+	}
+
+	FastAndFurious = Object.assign(FastAndFurious, social);
+	FastAndFurious.share('Mike Blessom');
+	FastAndFurious.like('Vin Diesel');
+
 	
+
+
+
 	
 
 </script>
