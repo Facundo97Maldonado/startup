@@ -8,38 +8,85 @@
 	<title>Topic 2</title>
 </head>
 <body>
-
+	<div>
+		<video src="trailer.mp4" id="FastAndFurious">
+			
+		</video>
+	</div>
+	<button id="firstEvent">First Event</button>
+	<button id="secondEvent">Second Event</button>
 <script>
-	let movies = {	
-		title:"",
-		year:"", 
-		duration:"",
-		play: function(){
-			let playVideo = document.getElementByTagName("video");
-			playVideo.load();
-			playVideo.play();
-		},
-		pause: function(){
-			let pauseVideo = document.getElementByTagName("video");
-			pauseVideo.pause();
-		},
-		resume: function(){
-			let resumeVideo = document.getElementByTagName("video");
-			resumeVideo.play();
+
+	class Emitter{
+
+		constructor(){
+			this.events = {};
 		}
-	};
-	function movie(title, year, duration){
-		this.title = title;
-		this.year = year;
-		this.duration = duration;
+		on(event, cb){
+			if(this.events[event] === undefined)
+				this.events[event] = [];
+			this.events[event].push(cb);
+		}
+		emit(eventName, data) {
+		  let event = this.events[eventName];
+		  if( event ) {
+		    	event.forEach(fn => {
+		       		fn.call(null, data);
+		  		});
+			}
+		}
+		off(event){
+			if(!(this.events[event] === undefined))
+				delete this.events[event];
+		}
+
 	}
+
+	let event = new Emitter();
+
+	function primerLog(){
+		console.log("First Log");
+	}
+	event.on('First Event', primerLog);
+	function secondLog(){
+		console.log("Second Log");
+	}
+	event.on('Second Event', secondLog);
+
+	let eventButton = document.getElementById("firstEvent");
+	let otherButton = document.getElementById("secondEvent");
+	
+	eventButton.addEventListener('click', function(){
+		event.emit('First Event');
+	});
+	otherButton.addEventListener('click', function(){
+		event.emit('Second Event');
+	});
+
+	event.off('First Event');
+
+
+	class movie extends Emitter{
+
+		constructor(title, year, duration){
+			super();
+			this.title = title;
+			this.year = year;
+			this.duration = duration;
+		}
+		play(){}
+		pause(){}
+		resume(){}
+	}
+
 	let FastAndFurious = new movie("Fast and Furious 8", "2017", "03:44");
 	let Transformers = new movie("Transformers - The dark side of the moon", "2013", "02:38");
 	let Terminator = new movie("Terminator III", "2010", "03:15");
 	console.log(FastAndFurious);
 	console.log(Transformers);
 	console.log(Terminator);
-</script>
+	
 
+</script>
 </body>
 </html>
