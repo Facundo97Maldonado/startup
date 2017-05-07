@@ -48,7 +48,14 @@ class movie extends Emitter{
 		});
 	}
 	addCast(actor){
-		this.cast.push(actor);
+		if (Array.isArray(actor)) {
+	    	for (let i = 0; i < actor.length; i++) {
+	    	this.cast.push(actor[i].name);
+	   		}
+	  	}
+	  	else{
+	  		this.cast.push(actor)
+	  	}
 	}
 }
 let FastAndFurious = new movie("Fast and Furious 8", "2017", "03:44");
