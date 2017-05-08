@@ -1,6 +1,6 @@
-import Emitter from '/emitter.js';
-import Logger from '/logger.js';
-import Actor from '/actor.js';
+import Emitter from './emitter';
+import Logger from './logger';
+import Actor from './actor';
 
 class movie extends Emitter{
 
@@ -99,3 +99,5 @@ let otherCast = [
 FastAndFurious.addCast(toretto);
 FastAndFurious.addCast(otherCast);
 console.log(FastAndFurious.cast);
+
+export default movie;
