@@ -2,6 +2,7 @@ class Emitter{
 
 	constructor(){
 		this.events = {};
+		let logger = new Logger()
 	}
 	on(event, cb){
 		if(this.events[event] === undefined)
@@ -10,6 +11,7 @@ class Emitter{
 	}
 	emit(eventName, data) {
 		let event = this.events[eventName];
+		logger.log(eventName)
 		if( event ) {
 		    event.forEach(fn => {
 		      	fn.call(null, data);
