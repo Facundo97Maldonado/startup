@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Topic 5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  	<script src="https://unpkg.com/react@latest/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="root">
+		
+	</div>
+<script>
+	class movie{
+
+		constructor(title, year, duration){
+			this.title = title;
+			this.year = year;
+			this.duration = duration;
+			this.cast = [];
+		}
+		play(){
+			console.log("Movie is now playing")
+		}
+		pause(){
+			console.log("Movie has been paused")
+		}
+		resume(){
+			console.log("Movie has been resumed")
+		}
+		addCast(actor){
+			if (Array.isArray(actor)) {
+		    	for (let i = 0; i < actor.length; i++) {
+		    	this.cast.push(actor[i].name);
+		   		}
+		  	}
+		  	else{
+		  		this.cast.push(actor)
+		  	}
+		}
+	}
+	let FastAndFurious = new movie("Fast and Furious 8", "2017", "02:15");
+
+	console.log(FastAndFurious);
+
+	class Actor {
+		constructor(name, age){
+			this.name = name;
+			this.age = age;
+		}
+	}
+</script>
+<script type="text/babel">
+
+	class Movie extends React.Component{
+		render(){
+		 return <li>
+		 			Title: {this.props.title}
+		 			| Year: {this.props.year}
+		 			| Duration {this.props.duration}
+		 			<br />
+		 		</li>
+		 		
+		}
+	}
+
+	class Add extends React.Component{
+		constructor(){
+			super();
+			this.state = {
+				title: '',
+				year: '', 
+				duration: '',
+				movieList: [],
+			}
+		}e
+		handleChangeTitle(movieTitle) {	  
+		    this.setState({
+		      title: movieTitle.target.value
+		    })
+		}
+		handleChangeYear(movieYear){
+			this.setState({
+				year: movieYear.target.value
+			})
+		}
+		handleChangeDuration(movieDuration){
+			this.setState({
+				duration: movieDuration.target.value
+			})
+		}
+		addMovie(event) {
+			event.preventDefault();
+			let movie = new Movie();
+			movie.title = this.state.title;
+			movie.year = this.state.year;
+			movie.duration = this.state.duration;
+		    this.state.movieList.push(movie);
+		    this.setState({
+		      title: '',
+		      year: '',
+		      duration: '',
+		      movieList: this.state.movieList
+		    })    
+
+		}
+
+		render() {
+		    return (
+		      <div className="movieList">
+		      	<form onSubmit={this.addMovie.bind(this)}>
+			        <div>
+			          Title:
+			          <input placeholder="Enter the title" type="text" value={this.state.title} onChange={this.handleChangeTitle.bind(this)} />
+			          <br />
+			          Year:
+			          <input placeholder="Enter the year" type="number" value={this.state.year} onChange={this.handleChangeYear.bind(this)} />
+			          <br />
+			          Duration: 
+			          <input placeholder="Enter the duration" type="time" value={this.state.duration} onChange={this.handleChangeDuration.bind(this)} />
+			          <br />
+			          <button type="submit">Add a movie!</button>
+			        </div>
+			    </form>
+		        <div>          
+		          <ul>
+		            {this.state.movieList.map((movie, index) => {
+		              return (
+		                <Movie key={index} title={movie.title} year={movie.year} duration={movie.duration}/>
+		              )
+		            })}
+		          </ul>          
+		        </div>
+		      </div>
+		    );
+  		}
+  	}
+
+
+	ReactDOM.render(<Add />, root);
+</script>
+</body>
+</html>
