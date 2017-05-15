@@ -21,76 +21,63 @@
 			this.title = title;
 			this.year = year;
 			this.duration = duration;
-			this.cast = [];
 		}
-		play(){
-			console.log("Movie is now playing")
-		}
-		pause(){
-			console.log("Movie has been paused")
-		}
-		resume(){
-			console.log("Movie has been resumed")
-		}
-		addCast(actor){
-			if (Array.isArray(actor)) {
-		    	for (let i = 0; i < actor.length; i++) {
-		    	this.cast.push(actor[i].name);
-		   		}
-		  	}
-		  	else{
-		  		this.cast.push(actor)
-		  	}
-		}
-	}
-	let FastAndFurious = new movie("Fast and Furious 8", "2017", "02:15");
 
-	console.log(FastAndFurious);
-
-	class Actor {
-		constructor(name, age){
-			this.name = name;
-			this.age = age;
-		}
 	}
 </script>
-<script type="text/babel">
 
+<script type="text/babel">
 	class Movie extends React.Component{
 		render(){
 		 return <li>
-		 			Title: {this.props.title}
+		 			Title: {this.props.title} 
 		 			| Year: {this.props.year}
 		 			| Duration {this.props.duration}
 		 			<br />
 		 		</li>
-		 		
-		}
+		}		
 	}
 
-	class Add extends React.Component{
-		constructor(){
-			super();
+	class MoviesAdministration extends React.Component{
+		constructor(props){
+			super(props);
 			this.state = {
 				title: '',
 				year: '', 
 				duration: '',
 				movieList: [],
-			}
-		}e
-		handleChangeTitle(movieTitle) {	  
+				newTitle: '',
+				newYear: '',
+				newDuration: '',
+				isEdited: false,
+			};
+			this.handleChangeTitle = this.handleChangeTitle.bind(this),
+			this.handleChangeYear = this.handleChangeYear.bind(this),
+			this.handleChangeDuration = this.handleChangeDuration.bind(this),
+
+			this.handleTitleEdit = this.handleTitleEdit.bind(this),
+			this.handleYearEdit = this.handleYearEdit.bind(this),
+			this.handleDurationEdit = this.handleDurationEdit.bind(this),
+
+			this.addMovie = this.addMovie.bind(this),
+			this.changeFormStyle = this.changeFormStyle.bind(this),
+			this.editMovie = this.editMovie.bind(this),
+			this.deleteMovie = this.deleteMovie.bind(this);
+		}
+		//Here starts handlers to set the state of a movie *
+		handleChangeTitle(event) {	  
 		    this.setState({
-		      title: movieTitle.target.value
+		      title: event.target.value
 		    })
 		}
-		handleChangeYear(movieYear){
+		handleChangeYear(event){
 			this.setState({
-				year: movieYear.target.value
+				year: event.target.value
 			})
 		}
-		handleChangeDuration(movieDuration){
+		handleChangeDuration(event){
 			this.setState({
-				duration: movieDuration.target.value
+				duration: event.target.value
 			})
 		}
 		addMovie(event) {
@@ -105,33 +92,124 @@
 		      year: '',
 		      duration: '',
 		      movieList: this.state.movieList
-		    })    
-
+		    })   
 		}
+		//Here it ends *
+
+		
+		//Handlers to the movie edition
+		handleTitleEdit(event){
+			this.setState({
+				newTitle: event.target.value
+			})
+		}
+		handleYearEdit(event){
+			this.setState({
+				newYear: event.target.value
+			})
+		}
+		handleDurationEdit(event){
+			this.setState({
+				newDuration: event.target.value
+			})
+		}
+		//This is what have to be done when the user press the save button
+		editMovie(index){ 
+			let editedMovie = new Movie();
+			editedMovie.title = this.state.newTitle;
+			editedMovie.year = this.state.newYear;
+			editedMovie.duration = this.state.newDuration;
+			console.log(editedMovie);
+			this.state.movieList.splice(index,1,editedMovie);
+			this.setState({
+				movieList: this.state.movieList,
+				
+				//This should clear the inputs
+				newTitle: '',
+				newYear: '',
+				newDuration: '',
+				isEdited: false,
+			})
+
+			//This hide the edit section after save it. Its wrong anyway
+			document.getElementById(index + 'd').style.display = 'none';
+			document.getElementById(index).style.display = 'none';
+			document.getElementById(index + 'a').style.display = 'none';
+			document.getElementById(index + 'b').style.display = 'none';
+			document.getElementById(index + 'c').style.display = 'none';
+		}
+
+		//This show the inputs to edit a movie
+		changeFormStyle(index){
+			/*this.setState({
+				isEdited: true
+			})*/
+			document.getElementById(index + 'd').style.display = 'block';
+			document.getElementById(index).style.display = 'block';
+			document.getElementById(index + 'a').style.display = 'block';
+			document.getElementById(index + 'b').style.display = 'block';
+			document.getElementById(index + 'c').style.display = 'block';
+		}
+
+		//Function to delete a movie
+		deleteMovie(index){
+ 			this.state.movieList.splice(index, 1) //key that is going to be removed, number of items that are going to be removed
+ 			this.setState({
+ 				movieList: this.state.movieList
+ 			})    
+ 		}
+ 		
 
 		render() {
 		    return (
 		      <div className="movieList">
-		      	<form onSubmit={this.addMovie.bind(this)}>
+		      	<form onSubmit={this.addMovie}>
 			        <div>
 			          Title:
-			          <input placeholder="Enter the title" type="text" value={this.state.title} onChange={this.handleChangeTitle.bind(this)} />
+			          <input placeholder="Enter the title" type="text" value={this.state.title} 
+			          			onChange={this.handleChangeTitle} />
 			          <br />
 			          Year:
-			          <input placeholder="Enter the year" type="number" value={this.state.year} onChange={this.handleChangeYear.bind(this)} />
+			          <input placeholder="Enter the year" type="number" value={this.state.year} 
+			          			onChange={this.handleChangeYear} />
 			          <br />
 			          Duration: 
-			          <input placeholder="Enter the duration" type="time" value={this.state.duration} onChange={this.handleChangeDuration.bind(this)} />
+			          <input placeholder="Enter the duration" type="time" value={this.state.duration} 
+			          			onChange={this.handleChangeDuration} />
 			          <br />
-			          <button type="submit">Add a movie!</button>
+			          <button type="submit">Add the movie</button>
 			        </div>
 			    </form>
 		        <div>          
 		          <ul>
 		            {this.state.movieList.map((movie, index) => {
-		              return (
-		                <Movie key={index} title={movie.title} year={movie.year} duration={movie.duration}/>
-		              )
+				      	  return (
+				      	  	<div>
+				      	  		<div>
+				               		<Movie key={index} title={movie.title} year={movie.year} duration={movie.duration}></Movie>
+				               		<button className="MoviesAdministration" onClick={() => this.changeFormStyle(index)}>
+				               			Edit this Movie
+				               		</button>
+				             		<button className="MoviesAdministration"  onClick={() => this.deleteMovie(index)}>
+				             			Delete this Movie
+				             		</button>
+				             	</div>
+								<div>
+								   	<p id={index + 'd'}>Complete the inputs</p>
+								   	<input id={index} type="text" placeholder="Enter the new title" 
+								   		value={this.state.newTitle} onChange={this.handleTitleEdit} />
+								   	<br />
+								   	<input id={index + 'a'} type="number" placeholder="Enter the new year" 
+								   		value={this.state.newYear} onChange={this.handleYearEdit}   />
+								   	<br />
+								   	<input id={index + 'b'} type="time" value={this.state.newDuration} 
+								   		onChange={this.handleDurationEdit} 
+								   		 />
+								   	<br />
+								   	<button id={index + 'c'} onClick={() => this.editMovie(index)}>Save</button>
+								</div>
+							</div>
+			              )
 		            })}
 		          </ul>          
 		        </div>
@@ -140,8 +218,7 @@
   		}
   	}
 
-
-	ReactDOM.render(<Add />, root);
+	ReactDOM.render(<MoviesAdministration />, root);
 </script>
 </body>
 </html>
